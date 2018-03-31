@@ -1,0 +1,73 @@
+program fpccmd;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFNDEF WINDOWS}
+  cthreads,
+  {$ENDIF}
+  Classes, sysutils, process, untCfg, untCmdLinux, untCmdMac, untCmdWindows,
+  untCompile, untAndroid;
+
+procedure writeHelp();
+begin
+  WriteLn('usage: fpccmd <Platform> <main file>');
+  WriteLn('');
+  WriteLn(Format('    Platform: %s', [{$IFDEF WINDOWS}'W(Win64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ELSE}{$IFDEF DARWIN}'M(Mac OSX), I(iOS)'{$ELSE}'L(Linux), AA(Android arm), AI(Android x86), AM(Android mips)'{$ENDIF}{$ENDIF}]));
+  WriteLn('');
+  WriteLn('    for other options, you may write a fpccmd.cfg under your project, it will lead the compile.');
+  WriteLn('');
+end;
+
+function isPlatformMatches(pt: String): Boolean;
+const
+  PTARR: array[0..{$IFDEF WINDOWS}3{$ELSE}{$IFDEF DARWIN}1{$ELSE}3{$ENDIF}{$ENDIF}] of string = ({$IFDEF WINDOWS}'W','AA','AI','AM'{$ELSE}{$IFDEF DARWIN}'M','I'{$ELSE}'L','AA','AI','AM'{$ENDIF}{$ENDIF});
+var
+  s: string;
+  match: Boolean = False;
+begin
+  for s in PTARR do begin
+    if (s = pt) then begin
+      match:= True;
+      Break;
+    end;
+  end;
+  Exit(match);
+end;
+
+var
+  opt: string;
+  pt: string;
+  mainFile: string = '';
+begin
+  opt := ParamStr(1);
+  if (opt = 'init') then begin
+    initCfg(True);
+  end else if (opt = 'reset') then begin
+    initCfg(False);
+  end else begin
+    pt:= ParamStr(1);
+    mainFile:= ParamStr(2);
+    if (pt = '') or (mainFile = '' ) then begin
+      writeHelp();
+      Exit;
+    end;
+    if (not isPlatformMatches(pt)) then begin
+      writeHelp();
+      Exit;
+    end;
+    {$IFDEF WINDOWS}
+    doCompileWindows(pt, mainFile);
+    {$ELSE}
+      {$IFDEF DARWIN}
+      doCompileMac(pt, mainFile);
+      {$ELSE}
+      doCompileLinux(pt, mainFile);
+      {$ENDIF}
+    {$ENDIF}
+  end;
+
+
+
+end.
+
