@@ -5,11 +5,14 @@ unit untIOSEnvironment;
 interface
 
 uses
-  Classes, SysUtils, Crt, registry, fphttpclient, untCompile, BaseUnix;
+  Classes, SysUtils, Crt, registry, fphttpclient, untCompile {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
 
 procedure setSource(src: string);
 function getSource(): string;
+
+{$IFDEF DARWIN}
 procedure installIOSEnvironment();
+{$ENDIF}
 
 implementation
 
@@ -95,6 +98,7 @@ begin
   end;
 end;
 
+{$IFDEF DARWIN}
 procedure installIOSEnvironment();
 const
   LIBFPC = '/usr/local/lib/fpc';
@@ -162,6 +166,8 @@ begin
   params.Free;
 
 end;
+
+{$ENDIF}
 
 { TDownloadProcess }
 

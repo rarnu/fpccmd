@@ -55,7 +55,11 @@ begin
   end else if (opt = 'update') then begin
     // TODO: self update
   end else if (opt = 'install-ios') then begin
+    {$IFDEF DARWIN}
     installIOSEnvironment();
+    {$ELSE}
+    WriteLn('please run this command under Mac OSX.');
+    {$ENDIF}
   end else if (opt = 'source') then begin
     WriteLn(getSource());
   end else if (opt = 'set-source') then begin
