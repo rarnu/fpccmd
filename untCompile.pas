@@ -11,6 +11,7 @@ uses
 procedure compile(cmd: string; params: TStringList; mainFile: string);
 procedure combine(linkFile: string; mainFile: string; surfix: string);
 procedure combineAll(mainFile: string; surfixes: TStringArray);
+procedure innerRunCmd(cmd: string; params: TStringList);
 
 implementation
 

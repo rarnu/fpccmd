@@ -7,14 +7,20 @@ uses
   cthreads,
   {$ENDIF}
   Classes, sysutils, process, untCfg, untCmdLinux, untCmdMac, untCmdWindows,
-  untCompile, untAndroid;
+  untCompile, untAndroid, untIOSEnvironment;
 
 procedure writeHelp();
 begin
+  WriteLn('usage: fpccmd <command>');
+  WriteLn('    init:        generate a fpccmd.cfg under your project');
+  WriteLn('    reset:       change fpccmd.cfg to default');
+  WriteLn('    update:      update fpccmd (you may need sudo for this)');
+  WriteLn('    install-ios: install compile environment for iOS (you may need sudo for this)');
+  WriteLn('    source:      show repository source');
+  WriteLn('    set-source:  set repository source');
+  WriteLn('');
   WriteLn('usage: fpccmd <Platform> <main file>');
-  WriteLn('');
   WriteLn(Format('    Platform: %s', [{$IFDEF WINDOWS}'W(Win64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ELSE}{$IFDEF DARWIN}'M(Mac OSX), I(iOS)'{$ELSE}'L(Linux), AA(Android arm), AI(Android x86), AM(Android mips)'{$ENDIF}{$ENDIF}]));
-  WriteLn('');
   WriteLn('    for other options, you may write a fpccmd.cfg under your project, it will lead the compile.');
   WriteLn('');
 end;
@@ -37,6 +43,7 @@ end;
 
 var
   opt: string;
+  src: string;
   pt: string;
   mainFile: string = '';
 begin
@@ -45,6 +52,15 @@ begin
     initCfg(True);
   end else if (opt = 'reset') then begin
     initCfg(False);
+  end else if (opt = 'update') then begin
+    // TODO: self update
+  end else if (opt = 'install-ios') then begin
+    installIOSEnvironment();
+  end else if (opt = 'source') then begin
+    WriteLn(getSource());
+  end else if (opt = 'set-source') then begin
+    src := ParamStr(2);
+    setSource(src);
   end else begin
     pt:= ParamStr(1);
     mainFile:= ParamStr(2);
