@@ -1,14 +1,17 @@
-unit untIOSEnvironment;
+unit untEnvironment;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Crt, registry, fphttpclient, untCompile {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
+  Classes, SysUtils, Crt, registry, fphttpclient, untVersion, untCompile {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
 
 procedure setSource(src: string);
 function getSource(): string;
+function getVersion(): string;
+procedure updateSelf();
+
 
 {$IFDEF DARWIN}
 procedure installIOSEnvironment();
@@ -96,6 +99,16 @@ begin
   if (Result = '') then begin
     Result := 'http://120.27.9.223/repo/';
   end;
+end;
+
+function getVersion(): string;
+begin
+  Exit(Format('%s[%d]', [VERSION_NAME, VERSION_CODE]));
+end;
+
+procedure updateSelf();
+begin
+  // TODO: update self
 end;
 
 {$IFDEF DARWIN}

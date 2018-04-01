@@ -7,10 +7,13 @@ uses
   cthreads,
   {$ENDIF}
   Classes, sysutils, process, untCfg, untCmdLinux, untCmdMac, untCmdWindows,
-  untCompile, untAndroid, untIOSEnvironment;
+  untCompile, untAndroid, untEnvironment, untVersion;
 
 procedure writeHelp();
 begin
+  WriteLn('FPCCMD (by rarnu) Version: ' + getVersion());
+  WriteLn('    github: rarnu/fpccmd');
+  WriteLn('');
   WriteLn('usage: fpccmd <command>');
   WriteLn('    init:        generate a fpccmd.cfg under your project');
   WriteLn('    reset:       change fpccmd.cfg to default');
@@ -53,7 +56,7 @@ begin
   end else if (opt = 'reset') then begin
     initCfg(False);
   end else if (opt = 'update') then begin
-    // TODO: self update
+    updateSelf();
   end else if (opt = 'install-ios') then begin
     {$IFDEF DARWIN}
     installIOSEnvironment();
