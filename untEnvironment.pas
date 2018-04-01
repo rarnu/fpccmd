@@ -5,7 +5,7 @@ unit untEnvironment;
 interface
 
 uses
-  Classes, SysUtils, Crt, registry, fphttpclient, untVersion, untCompile {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
+  Classes, SysUtils, Crt, registry, fphttpclient, fpjson, jsonparser, jsonscanner, untVersion, untUpdate, untCompile {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
 
 procedure setSource(src: string);
 function getSource(): string;
@@ -107,8 +107,63 @@ begin
 end;
 
 procedure updateSelf();
+const
+  PLATFORM = {$IFDEF WINDOWS}'W'{$ELSE}{$IFDEF DARWIN}'M'{$ELSE}'L'{$ENDIF}{$ENDIF};
+  DOWNLOAD_FILE = PLATFORM + 'DOWNLOAD';
+var
+  jsonstr: string;
+  url: string;
+  json: TJSONObject = nil;
+  parser: TJSONParser = nil;
+  lastversion: Integer = 0;
+  localFileName: string;
+  de: TDownloadProcess;
+  downloadFilename: string = '';
 begin
-  // TODO: update self
+  url := getSource();
+  with TFPHTTPClient.Create(nil) do begin
+    try
+      jsonstr := Get(url + 'version.json');
+    except
+    end;
+    Free;
+  end;
+  try
+    try
+      parser := TJSONParser.Create(jsonstr, [joUTF8]);
+      json := TJSONObject(parser.Parse);
+      lastversion:= json.Integers[PLATFORM];
+      downloadFilename := json.Strings[DOWNLOAD_FILE];
+    except
+    end;
+  finally
+    if (parser <> nil) then parser.Free;
+    if (json <> nil) then json.Free;
+  end;
+  if (lastversion > VERSION_CODE) and (downloadFilename <> '') then begin
+    localFileName:= GetEnvironmentVariable('HOME') + '/.config/fpccmd/';
+    ForceDirectories(localFileName);
+    SetCurrentDir(localFileName);
+    localFileName += downloadFilename;
+    if (FileExists(localFileName)) then DeleteFile(localFileName);
+    de := TDownloadProcess.Create;
+    with TFPHTTPClient.Create(nil) do begin
+      OnDataReceived:= @de.onData;
+      try
+        Get(url + downloadFilename, localFileName);
+      except
+        on e: Exception do begin
+          WriteLn();
+          WriteLn('Download error => ' + e.Message);
+        end;
+      end;
+      Free;
+    end;
+    de.Free;
+    doUpdate(localFileName);
+  end else begin
+    WriteLn('You are already installed the last version.');
+  end;
 end;
 
 {$IFDEF DARWIN}

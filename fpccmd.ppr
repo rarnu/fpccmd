@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}
   Classes, sysutils, process, untCfg, untCmdLinux, untCmdMac, untCmdWindows,
-  untCompile, untAndroid, untEnvironment, untVersion;
+  untCompile, untAndroid, untEnvironment, untVersion, untUpdate;
 
 procedure writeHelp();
 begin
