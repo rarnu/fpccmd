@@ -1,7 +1,11 @@
+.DS_Store
 *.ppu
 *.o
 *.a
 *.ctps
 link.res
+ppas.sh
 lib/
 out/
+*.exe
+

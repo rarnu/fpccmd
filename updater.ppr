@@ -1,0 +1,21 @@
+{% Compile Windows only %}
+
+program updater;
+
+{$mode objfpc}{$H+}
+
+uses
+  Classes, sysutils;
+
+var
+  originPath: string;
+  newPath: string;
+begin
+  originPath:= ExtractFilePath(ParamStr(1)) + 'fpccmd.exe';
+  newPath:= originPath + '.new';
+  while (FileExists(originPath)) do begin
+    DeleteFile(originPath);
+  end;
+  RenameFile(newPath, originPath);
+end.
+

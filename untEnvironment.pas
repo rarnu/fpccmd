@@ -12,7 +12,6 @@ function getSource(): string;
 function getVersion(): string;
 procedure updateSelf();
 
-
 {$IFDEF DARWIN}
 procedure installIOSEnvironment();
 {$ENDIF}
@@ -119,7 +118,17 @@ var
   localFileName: string;
   de: TDownloadProcess;
   downloadFilename: string = '';
+  {$IFNDEF WINDOWS}
+  uid: LongWord;
+  {$ENDIF}
 begin
+  {$IFNDEF WINDOWS}
+  uid := FpGetuid;
+  if (uid <> 0) then begin
+    WriteLn('Install of iOS environment requires sudo.');
+    Exit;
+  end;
+  {$ENDIF}
   url := getSource();
   with TFPHTTPClient.Create(nil) do begin
     try
@@ -141,7 +150,11 @@ begin
     if (json <> nil) then json.Free;
   end;
   if (lastversion > VERSION_CODE) and (downloadFilename <> '') then begin
+    {$IFDEF WINDOWS}
+    localFileName:= ExtractFilePath(ParamStr(1));
+    {$ELSE}
     localFileName:= GetEnvironmentVariable('HOME') + '/.config/fpccmd/';
+    {$ENDIF}
     ForceDirectories(localFileName);
     SetCurrentDir(localFileName);
     localFileName += downloadFilename;
@@ -150,7 +163,7 @@ begin
     with TFPHTTPClient.Create(nil) do begin
       OnDataReceived:= @de.onData;
       try
-        Get(url + downloadFilename, localFileName);
+        Get(url + downloadFilename, localFileName {$IFDEF WINDOWS} + '.new'{$ENDIF});
       except
         on e: Exception do begin
           WriteLn();
@@ -160,7 +173,7 @@ begin
       Free;
     end;
     de.Free;
-    doUpdate(localFileName);
+    doUpdate(url, localFileName);
   end else begin
     WriteLn('You are already installed the last version.');
   end;
