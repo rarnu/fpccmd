@@ -8,6 +8,7 @@ uses
   Classes, SysUtils, untCfg, untCompile, untAndroid;
 
 procedure doCompileLinux(pt: String; mainFile: string);
+procedure doCompileLinuxUI(mainFile: string; uiType: string);
 
 implementation
 
@@ -59,6 +60,28 @@ begin
   end else begin
     compileAndroid(pt, mainFile);
   end;
+end;
+
+procedure doCompileLinuxUI(mainFile: string; uiType: string);
+const
+  LIB = 'lib/x86_64-linux';
+var
+  cmd: string = FPC;
+  plist: TStringList;
+begin
+  plist := getCfg(mainFile, LIB);
+  plist.Add('-Fu' + TYPHON + '/packager/units/x86_64-linux');
+  plist.Add('-Fu' + TYPHON + '/lcl/units/x86_64-linux/gtk2');
+  plist.Add('-Fu' + TYPHON + '/lcl/units/x86_64-linux');
+  plist.Add('-Fu' + TYPHON + '/components/BaseUtils/lib/x86_64-linux');
+  plist.Add('-Fu' + TYPHON + '/components/BaseControls/lib/x86_64-linux/gtk2');
+  if (uiType = 'O') then begin
+    plist.Add('-Fu' + TYPHON + '/components/pl_ORCA/lib/x86_64-linux/gtk2');
+  end;
+  plist.Add('-dLCL');
+  plist.Add('-dLCLgtk2');
+  compile(cmd, plist, mainFile);
+  plist.Free;
 end;
 
 end.

@@ -12,6 +12,7 @@ uses
 procedure writeHelp();
 begin
   WriteLn('FPCCMD (by rarnu) Version: ' + getVersion());
+  WriteLn('    matched CodeTyphon Version: 6.30');
   WriteLn('    github: rarnu/fpccmd');
   WriteLn('');
   WriteLn('usage: fpccmd <command>');
@@ -22,8 +23,9 @@ begin
   WriteLn('    source:      show repository source');
   WriteLn('    set-source:  set repository source');
   WriteLn('');
-  WriteLn('usage: fpccmd <Platform> <main file>');
+  WriteLn('usage: fpccmd <Platform> <main file> <ui type>');
   WriteLn(Format('    Platform: %s', [{$IFDEF WINDOWS}'W(Win64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ELSE}{$IFDEF DARWIN}'M(Mac OSX), I(iOS)'{$ELSE}'L(Linux), AA(Android arm), AI(Android x86), AM(Android mips)'{$ENDIF}{$ENDIF}]));
+  WriteLn(Format('    UIType: %s', [{$IFDEF WINDOWS}'W(Win64), O(Orca64)'{$ELSE}{$IFDEF DARWIN}'C(Cocoa64), O(Orca32)'{$ELSE}'G(Gtk64), O(Orca64)'{$ENDIF}{$ENDIF}]));
   WriteLn('    for other options, you may write a fpccmd.cfg under your project, it will lead the compile.');
   WriteLn('');
 end;
@@ -44,10 +46,27 @@ begin
   Exit(match);
 end;
 
+function isUITypeMatches(ui: string): Boolean;
+const
+  UIARR: array[0..1] of string = ({$IFDEF WINDOWS}'W', 'O'{$ELSE}{$IFDEF DARWIN}'C', 'O'{$ELSE}'G', 'O'{$ENDIF}{$ENDIF});
+var
+  s: string;
+  match: Boolean = False;
+begin
+  for s in UIARR do begin
+    if (s = ui) then begin
+      match:= True;
+      Break;
+    end;
+  end;
+  Exit(match);
+end;
+
 var
   opt: string;
   src: string;
   pt: string;
+  ui: string;
   mainFile: string = '';
 begin
   opt := ParamStr(1);
@@ -71,6 +90,7 @@ begin
   end else begin
     pt:= ParamStr(1);
     mainFile:= ParamStr(2);
+    ui := ParamStr(3);
     if (pt = '') or (mainFile = '' ) then begin
       writeHelp();
       Exit;
@@ -79,15 +99,32 @@ begin
       writeHelp();
       Exit;
     end;
-    {$IFDEF WINDOWS}
-    doCompileWindows(pt, mainFile);
-    {$ELSE}
-      {$IFDEF DARWIN}
-      doCompileMac(pt, mainFile);
+    if (ui <> '') and (not isUITypeMatches(ui)) then begin
+      writeHelp();
+      Exit;
+    end;
+    if (ui = '') then begin
+      {$IFDEF WINDOWS}
+      doCompileWindows(pt, mainFile);
       {$ELSE}
-      doCompileLinux(pt, mainFile);
+        {$IFDEF DARWIN}
+        doCompileMac(pt, mainFile);
+        {$ELSE}
+        doCompileLinux(pt, mainFile);
+        {$ENDIF}
       {$ENDIF}
-    {$ENDIF}
+    end else begin
+      {$IFDEF WINDOWS}
+      doCompileWindowsUI(mainFile, ui);
+      {$ELSE}
+        {$IFDEF DARWIN}
+        doCompileMacUI(mainFile, ui);
+        doCreateMacBundle(mainFile);
+        {$ELSE}
+        doCompileLinuxUI(mainFile, ui);
+        {$ENDIF}
+      {$ENDIF}
+    end;
   end;
 
 

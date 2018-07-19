@@ -8,6 +8,7 @@ uses
   Classes, SysUtils, untCfg, untCompile, untAndroid;
 
 procedure doCompileWindows(pt: String; mainFile: string);
+procedure doCompileWindowsUI(mainFile: string; uiType: string);
 
 implementation
 
@@ -60,6 +61,32 @@ begin
   end else begin
     compileAndroid(pt, mainFile);
   end;
+end;
+
+procedure doCompileWindowsUI(mainFile: string; uiType: string);
+const
+  LIB = 'lib\x86_64-win64';
+var
+  cmd: string = FPC64;
+  plist: TStringList;
+begin
+  plist := getCfg(mainFile, LIB);
+  plist.Add('-WG');
+  plist.Add('-Fu' + TYPHON + '\packager\units\x86_64-win64');
+  plist.Add('-Fu' + TYPHON + '\lcl\units\x86_64-win64\win32');
+  plist.Add('-Fu' + TYPHON + '\lcl\units\x86_64-win64');
+  plist.Add('-Fu' + TYPHON + '\components\BaseUtils\lib/x86_64-win64');
+  plist.Add('-Fu' + TYPHON + '\components\BaseControls\lib/x86_64-win64/win32');
+  if (uiType = 'O') then begin
+    plist.Add('-Fu' + TYPHON + '\components\pl_ORCA\lib\x86_64-win64/win32');
+    plist.Add('-Fu' + TYPHON + '\components\pl_Win_DirectX11\lib\x86_64-win64\win32');
+    plist.Add('-Fu' + TYPHON + '\components\pl_Win_GDI\lib\x86_64-win64\win32');
+    plist.Add('-Fu' + TYPHON + '\components\pl_Win_DirectX\lib\x86_64-win64\win32');
+  end;
+  plist.Add('-dLCL');
+  plist.Add('-dLCLwin32');
+  compile(cmd, plist, mainFile);
+  plist.Free;
 end;
 
 end.
