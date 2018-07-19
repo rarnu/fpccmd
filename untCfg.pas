@@ -29,6 +29,16 @@ begin
   end;
 end;
 
+procedure writeBeforeAfter(path: string);
+begin
+  with TStringList.Create do begin
+    Clear;
+    SaveToFile(ChangeFileExt(path, '.before'));
+    SaveToFile(ChangeFileExt(path, '.after'));
+    Free;
+  end;
+end;
+
 procedure initCfg(newFile: Boolean);
 var
   path: string;
@@ -40,12 +50,14 @@ begin
       Exit;
     end;
     writeCfgFile(path);
+    writeBeforeAfter(path);
   end else begin
     if (not FileExists(path)) then begin
       WriteLn('fpccmd.cfg not exists.');
       Exit;
     end;
     writeCfgFile(path);
+    writeBeforeAfter(path);
   end;
 end;
 

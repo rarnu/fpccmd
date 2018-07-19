@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}
   Classes, sysutils, process, untCfg, untCmdLinux, untCmdMac, untCmdWindows,
-  untCompile, untAndroid, untEnvironment, untVersion, untUpdate;
+  untCompile, untAndroid, untEnvironment, untVersion, untUpdate, untCommandCommon;
 
 procedure writeHelp();
 begin
@@ -27,6 +27,15 @@ begin
   WriteLn(Format('    Platform: %s', [{$IFDEF WINDOWS}'W(Win64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ELSE}{$IFDEF DARWIN}'M(Mac OSX), I(iOS)'{$ELSE}'L(Linux), AA(Android arm), AI(Android x86), AM(Android mips)'{$ENDIF}{$ENDIF}]));
   WriteLn(Format('    UIType: %s', [{$IFDEF WINDOWS}'W(Win64), O(Orca64)'{$ELSE}{$IFDEF DARWIN}'C(Cocoa64), O(Orca32)'{$ELSE}'G(Gtk64), O(Orca64)'{$ENDIF}{$ENDIF}]));
   WriteLn('    for other options, you may write a fpccmd.cfg under your project, it will lead the compile.');
+  WriteLn('');
+  WriteLn('usage: command before and after');
+  WriteLn('    You may write a file named "fpccmd.before" or "fpccmd.after" to let fpccmd run some commands automatically.');
+  WriteLn('    command supported list: cp, mv, rm, mkdir, no additional parameters supported.');
+  WriteLn('    project macros supported list: ${PATH}, ${PROJ}');
+  WriteLn('    platform macros supported list: ${ALL}, ${W}, ${M}, ${L}, ${AA}, ${AI}, ${AM}, ${I}');
+  WriteLn('    uitype macro supported list: ${UNA}, ${UALL}, ${UW}, ${UC}, ${UG}, ${UO}');
+  WriteLn('example: a command runs after compile only for Mac OSX');
+  WriteLn('    ${M}${UNA} cp ${PATH}/libsample.dylib ${PATH}/${PROJ}.app/Contents/MacOS/libsample.dylib');
   WriteLn('');
 end;
 
@@ -103,6 +112,8 @@ begin
       writeHelp();
       Exit;
     end;
+    // before
+    commandsBefore(mainFile, pt, ui);
     if (ui = '') then begin
       {$IFDEF WINDOWS}
       doCompileWindows(pt, mainFile);
@@ -125,6 +136,8 @@ begin
         {$ENDIF}
       {$ENDIF}
     end;
+    // after
+    commandsAfter(mainFile, pt, ui);
   end;
 
 

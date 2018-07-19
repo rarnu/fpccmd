@@ -6,7 +6,7 @@ Easy compile FPC projects.
 
 ### compile
 
-Use [CodeTyphon](http://www.pilotlogic.com/) (above 6.00) to compile ```fpccmd```.
+Use [CodeTyphon](http://www.pilotlogic.com/) (6.30) to compile ```fpccmd```.
 
 - - -
 
@@ -25,7 +25,7 @@ You may edit the ```fpccmd.cfg``` for any new options you want.
 Run ```fpccmd``` within project path to compile the project.
 
 ```
-$ fpccmd <platform> <main file>
+$ fpccmd <platform> <main file> [<ui type>]
 ```
 
 ```fpccmd``` will found and add the search path and no necessary for you to add the path manually.
