@@ -53,7 +53,7 @@ begin
   cmd := cmd.Replace('${PATH}', GetCurrentDir);
   cmd := cmd.Replace('${PROJ}', proj);
   {$IFDEF WINDOWS}
-  // TODO: translate command for windows
+  // translate command for windows
   // cp, mv, rm, mkdir
   cmd := cmd.Replace('/', '\');
   if (cmd.StartsWith('cp ')) then begin

@@ -30,6 +30,13 @@ $ fpccmd <platform> <main file> [<ui type>]
 
 ```fpccmd``` will found and add the search path and no necessary for you to add the path manually.
 
+```fpccmd``` can run commands before or after compile. Just edit the ```fpccmd.before``` and ```fpccmd.after```.
+
+```
+sample: 
+${ALL}${UALL} cp ${PATH}/a.png ${PATH}/${PROJ}/image/a.png
+```
+
 - - -
 
 ### Source & Update
