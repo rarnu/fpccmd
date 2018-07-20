@@ -75,4 +75,4 @@ $ sudo fpccmd install-ios
 
 ### Screenshot
 
-![](Screenshot.png)
+![](https://raw.githubusercontent.com/rarnu/fpccmd/master/screenshot.png)
