@@ -8,7 +8,7 @@ uses
   Classes, SysUtils;
 
 procedure initCfg(newFile: Boolean);
-function getCfg(mainFile: string; lib: string): TStringList;
+function getCfg(mainFile: string; lib: string; filterPort: Boolean = False): TStringList;
 
 implementation
 
@@ -61,18 +61,20 @@ begin
   end;
 end;
 
-procedure getDirs(base: string; outList: TStringList);
+procedure getDirs(base: string; outList: TStringList; filterPort: Boolean = False);
 var
   src: TSearchRec;
 begin
   if (FindFirst(base + '*', faAnyFile, src) = 0) then begin
     repeat
-      if (src.Name <> '.') and (src.Name <> '..') and (src.Name <> 'lib') and (src.Name <> 'out') and (src.Name <> 'build')  then begin
-        if (DirectoryExists(base + src.Name)) then begin
-          outList.Add(base + src.Name);
-          getDirs(base + src.Name + SPLIT, outList);
-        end;
+      if (src.Name = '.') or (src.Name = '..') or (src.Name = 'lib') or (src.Name = 'out') or (src.Name = 'build')  then Continue;
+      if (filterPort) and (string(src.Name).EndsWith('port')) then Continue;
+
+      if (DirectoryExists(base + src.Name)) then begin
+        outList.Add(base + src.Name);
+        getDirs(base + src.Name + SPLIT, outList);
       end;
+
     until FindNext(src) <> 0;
     FindClose(src);
   end;
@@ -87,7 +89,7 @@ begin
   end;
 end;
 
-function getCfg(mainFile: string; lib: string): TStringList;
+function getCfg(mainFile: string; lib: string; filterPort: Boolean = False): TStringList;
 var
   base: string;
   path: string;
@@ -115,7 +117,7 @@ begin
   Result.Add('-Fu.');
   Result.Add('-Fi.');
   dirs := TStringList.Create;
-  getDirs(base, dirs);
+  getDirs(base, dirs, filterPort);
   relativeDirs(base, dirs);
   for s in dirs do begin
     Result.Add('-Fi' + s);

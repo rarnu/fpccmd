@@ -25,7 +25,7 @@ var
   cmd: string = FPC;
   plist: TStringList;
 begin
-  plist := getCfg(mainFile, LIB);
+  plist := getCfg(mainFile, LIB, True);
   plist.Add('-Fu' + TYPHON + '/packager/units/x86_64-linux');
   compile(cmd, plist, mainFile);
   plist.Free;
@@ -69,7 +69,7 @@ var
   cmd: string = FPC;
   plist: TStringList;
 begin
-  plist := getCfg(mainFile, LIB);
+  plist := getCfg(mainFile, LIB, True);
   plist.Add('-Fu' + TYPHON + '/packager/units/x86_64-linux');
   plist.Add('-Fu' + TYPHON + '/lcl/units/x86_64-linux/gtk2');
   plist.Add('-Fu' + TYPHON + '/lcl/units/x86_64-linux');

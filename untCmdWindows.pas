@@ -48,7 +48,7 @@ var
   cmd: string = FPC64;
   plist: TStringList;
 begin
-  plist := getCfg(mainFile, LIB);
+  plist := getCfg(mainFile, LIB, True);
   plist.Add('-Fu' + TYPHON + '\packager\units/x86_64-win64');
   compile(cmd, plist, mainFile);
   plist.Free;
@@ -70,7 +70,7 @@ var
   cmd: string = FPC64;
   plist: TStringList;
 begin
-  plist := getCfg(mainFile, LIB);
+  plist := getCfg(mainFile, LIB, True);
   plist.Add('-WG');
   plist.Add('-Fu' + TYPHON + '\packager\units\x86_64-win64');
   plist.Add('-Fu' + TYPHON + '\lcl\units\x86_64-win64\win32');

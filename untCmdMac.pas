@@ -55,7 +55,7 @@ var
   cmd: string = FPC64;
   plist: TStringList;
 begin
-  plist := getCfg(mainFile, LIB);
+  plist := getCfg(mainFile, LIB, True);
   plist.Add('-Fu' + TYPHON + '/packager/units/x86_64-darwin');
   plist.Add('-Fl' + MACSDK);
   compile(cmd, plist, mainFile);
@@ -80,7 +80,7 @@ begin
   if (uiType = 'O') then begin
     LIB := 'lib/i386-darwin';
     cmd := FPC32;
-    plist := getCfg(mainFile, LIB);
+    plist := getCfg(mainFile, LIB, True);
     plist.Add('-k-framework');
     plist.Add('-kCarbon');
     plist.Add('-k-framework');
@@ -98,7 +98,7 @@ begin
   end else begin
     LIB := 'lib/x86_64-darwin';
     cmd := FPC64;
-    plist := getCfg(mainFile, LIB);
+    plist := getCfg(mainFile, LIB, True);
     plist.Add('-k-framework ');
     plist.Add('-kCocoa');
     plist.Add('-Fu' + TYPHON + '/lcl/units/x86_64-darwin/cocoa');
