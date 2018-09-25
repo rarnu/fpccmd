@@ -11,9 +11,6 @@ function findLastAndroidNDK(pt: string; binPath: string): string;
 
 implementation
 
-const
-   SPLIT = {$IFDEF WINDOWS}'\'{$ELSE}'/'{$ENDIF};
-
 function extractApiVersion(fn: string): Integer;
 var
   tmp: string;
@@ -34,7 +31,7 @@ var
 begin
   if (pt = 'AI') then lib := 'i386'
   else if (pt = 'AM') then lib := 'mips';
-  if (FindFirst(binPath +  SPLIT + 'android-*', faAnyFile, src) = 0) then begin
+  if (FindFirst(binPath +  DirectorySeparator + 'android-*', faAnyFile, src) = 0) then begin
     repeat
       if (src.Name = '.') or (src.Name = '..') then Continue;
       v := extractApiVersion(src.Name);

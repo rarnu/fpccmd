@@ -12,9 +12,6 @@ procedure commandsAfter(mainFile: string; platform: string; uitype: string);
 
 implementation
 
-const
-  SPLIT = {$IFDEF WINDOWS}'\'{$ELSE}'/'{$ENDIF};
-
 procedure internalRunLine(proj: string; platform: string; uitype: string; cmd: string);
 var
   prefix: string;
@@ -79,8 +76,9 @@ begin
     cmd := cmd.Replace('mkdir ', 'mkdir -p ');
   end;
   {$ENDIF}
-
+  {$Warnings off}
   RunCommandInDir(GetCurrentDir, cmd, outstr);
+  {$Warnings on}
 end;
 
 procedure internalCommands(mainFile: string; platform: string; uitype:string; cmdFile: string);
@@ -105,7 +103,7 @@ procedure commandsBefore(mainFile: string; platform: string; uitype: string);
 var
   filepath: string;
 begin
-  filepath:= GetCurrentDir + SPLIT + 'fpccmd.before';
+  filepath:= GetCurrentDir + DirectorySeparator + 'fpccmd.before';
   if (FileExists(filepath)) then begin
     internalCommands(mainFile, platform, uitype, filepath);
   end;
@@ -115,7 +113,7 @@ procedure commandsAfter(mainFile: string; platform: string; uitype: string);
 var
   filepath: string;
 begin
-  filepath:= GetCurrentDir + SPLIT + 'fpccmd.after';
+  filepath:= GetCurrentDir + DirectorySeparator + 'fpccmd.after';
   if (FileExists(filepath)) then begin
     internalCommands(mainFile, platform, uitype, filepath);
   end;

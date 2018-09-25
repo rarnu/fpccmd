@@ -69,11 +69,9 @@ begin
   end;
   linkList.Free;
   innerRunCmd('/usr/bin/ar', params);
-
   params.Clear;
   params.Add(libName);
   innerRunCmd('/usr/bin/ranlib', params);
-
   params.Free;
 end;
 

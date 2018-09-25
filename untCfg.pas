@@ -12,9 +12,6 @@ function getCfg(mainFile: string; lib: string; filterPort: Boolean = False): TSt
 
 implementation
 
-const
-   SPLIT = {$IFDEF WINDOWS}'\'{$ELSE}'/'{$ENDIF};
-
 procedure writeCfgFile(path: String);
 begin
   with TStringList.Create do begin
@@ -43,7 +40,7 @@ procedure initCfg(newFile: Boolean);
 var
   path: string;
 begin
-  path := GetCurrentDir + SPLIT + 'fpccmd.cfg';
+  path := GetCurrentDir + DirectorySeparator + 'fpccmd.cfg';
   if (newFile) then begin
     if (FileExists(path)) then begin
       WriteLn('fpccmd.cfg already exists.');
@@ -72,7 +69,7 @@ begin
 
       if (DirectoryExists(base + src.Name)) then begin
         outList.Add(base + src.Name);
-        getDirs(base + src.Name + SPLIT, outList);
+        getDirs(base + src.Name + DirectorySeparator, outList);
       end;
 
     until FindNext(src) <> 0;
@@ -97,11 +94,11 @@ var
   s: string;
 begin
   base := ExtractFilePath(mainFile);
-  if (not base.EndsWith(SPLIT)) then begin
-    base += SPLIT;
+  if (not base.EndsWith(DirectorySeparator)) then begin
+    base += DirectorySeparator;
   end;
-  if (base = SPLIT) then begin
-    base := GetCurrentDir + SPLIT;
+  if (base = DirectorySeparator) then begin
+    base := GetCurrentDir + DirectorySeparator;
   end;
   SetCurrentDir(base);
   if (not DirectoryExists(base + lib)) then begin

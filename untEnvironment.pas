@@ -5,7 +5,7 @@ unit untEnvironment;
 interface
 
 uses
-  Classes, SysUtils, Crt, registry, fphttpclient, fpjson, jsonparser, jsonscanner, untVersion, untUpdate, untCompile {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
+  Classes, SysUtils, Crt, registry, fphttpclient, fpjson, jsonparser, jsonscanner, untVersion, untUpdate {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
 
 procedure setSource(src: string);
 function getSource(): string;
