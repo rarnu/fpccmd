@@ -33,7 +33,7 @@ $ sudo cp fpccmd /usr/local/bin/
 
 ### 使用(1) 编译项目
 
-要使用 ```fpccmd``` 来编译项目，必须先进行初始化，执行以下命令：
+要使用 ```fpccmd``` 来编译项目，必须先进行初始化，执行以下命令：
 
 ```
 $ fpccmd init
@@ -41,20 +41,20 @@ $ fpccmd init
 
 执行完毕后，项目内会出现 ```fpccmd.cfg```，```fpccmd.before```，```fpccmd.after``` 三个文件。
 
-```fpccmd.cfg``` 用于进行额外的 fpc 参数配置，并且已包含了基础的配置选项，这些选项按每一行一个进行设置。
+```fpccmd.cfg``` 用于进行额外的 fpc 参数配置，并且已包含了基础的配置选项，这些选项按每一行一个进行设置。
 
-注意，对于搜索目录的配置，若被搜索的目录在项目内，则不需要进行配置，fpccmd 会自动进行管理。若搜索目录在项目外，则需要进行配置，例如 ```-Fu../../myct/util```。
+注意，对于搜索目录的配置，若被搜索的目录在项目内，则不需要进行配置，fpccmd 会自动进行管理。若搜索目录在项目外，则需要进行配置，例如 ```-Fu../../myct/util```。
 
 ```fpccmd.before``` 和 ```fpccmd.after``` 用于在编译前后执行特定命令，命令的写法如下：
 
 ```
-${平台}${UI类型} 命令
+${平台}${UI类型} 命令
 例如：
 ${ALL}${UALL} cp ${PATH}/a.png ${PATH}/${PROJ}/image/a.png  # 在所有平台，所有 UI 类型下，执行 cp 命令来复制图片
 ${M}${UNA} cp ${PATH}/libsample.dylib ${PATH}/${PROJ}.app/Contents/MacOS/libsample.dylib # 在 Mac 平台，不使用 UI 框架的情况下，执行 cp 命令来复制动态库
 ```
 
-在 before 和 after 文件内，可用的命令有以下几种（全部遵循 linux 的命令风格，但是对于目录之类的不需要加参数，程序会自动处理）：
+在 before 和 after 文件内，可用的命令有以下几种（全部遵循 linux 的命令风格，但是对于目录之类的不需要加参数，程序会自动处理）：
 
 ```
 cp:    复制文件或目录
@@ -77,7 +77,7 @@ $ fpccmd AA sample.ppr   # 编译 Android(arm) 下的应用，不采用 UI 框�
 
 ### 使用(2) 依赖模块管理
 
-fpccmd 可以帮助管理 CodeTyphon 项目所使用的模块。
+fpccmd 可以帮助管理 CodeTyphon 项目所使用的模块。
 
 要使用 fpccmd 来管理模块，必须先编写一个 ```fpcdep.spec``` 文件，该文件描述了要依赖的模块。
 
@@ -121,7 +121,7 @@ $ fpccmd module get
 $ fpccmd module get myct  # 此时只下载并配置 myct 这个模块
 ```
 
-你也可以把自己的 FPC 模块做成共享的，以便他人使用，fpccmd 不要求有一个中央模块仓库，仅使用 github（或其他的 git 平台） 即可。
+你也可以把自己的 FPC 模块做成共享的，以便他人使用，fpccmd 不要求有一个中央模块仓库，仅使用 github（或其他的 git 平台） 即可。
 
 要共享一个 FPC 模块，你需要拥有一个 ```fpcmodule.spec``` 文件，使用以下命令可以创建一个：
 
@@ -151,7 +151,7 @@ required_package=adLCL;pl_orca
 
 对于需要进行 iOS 跨平台开发的人员来说，必须事先配置 iOS 端的环境。
 
-fpccmd 提供了在 Mac 上直接进行配置的能力，只需要执行以下命令：
+fpccmd 提供了在 Mac 上直接进行配置的能力，只需要执行以下命令：
 
 ```
 $ sudo fpccmd install-ios
