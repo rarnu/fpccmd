@@ -18,6 +18,10 @@ procedure installIOSEnvironment();
 
 implementation
 
+{$IFDEF DARWIN}
+uses untCompile;
+{$ENDIF}
+
 type
   { TDownloadProcess }
 

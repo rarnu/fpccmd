@@ -76,7 +76,8 @@ var
   proj: string;
   dom: TXMLDocument;
   nBase: TDOMNode;
-  nInc, nUnit, nLib: TDOMNode;
+  nReqBase: TDOMNode;
+  nInc, nUnit, nLib, nReq: TDOMNode;
 
   aUnit, aInc, aLib, aReq: TStringArray;
 
@@ -156,6 +157,40 @@ var
     Exit(widestring(ret));
   end;
 
+  procedure mergeReq(x: TXMLDocument; n: TDOMNode; a: TStringArray);
+  var
+    currentList: TStringList;
+    i: Integer;
+    item: TDOMNode;
+    pkg: TDOMNode;
+  begin
+    currentList := TStringList.Create;
+    for i := 0 to n.ChildNodes.Count - 1 do begin
+      currentList.Add(string(n.ChildNodes[i].FirstChild.Attributes.GetNamedItem('Value').NodeValue));
+    end;
+    // rmeove all node
+    for i := n.ChildNodes.Count - 1 downto 0 do begin
+      n.DetachChild(n.ChildNodes[i]);
+    end;
+
+    for i := 0 to Length(a) - 1 do begin
+      if (currentList.IndexOf(a[i]) = -1) then begin
+        currentList.Add(a[i]);
+      end;
+    end;
+
+    TDOMElement(n).SetAttribute('Count', widestring(currentList.Count.ToString));
+
+    for i:= 0 to currentList.Count - 1 do begin
+      item := x.CreateElement(widestring(Format('Item%d', [i + 1])));
+      pkg := x.CreateElement('PackageName');
+      TDOMElement(pkg).SetAttribute('Value', widestring(currentList[i]));
+      item.AppendChild(pkg);
+      n.AppendChild(item);
+    end;
+    currentList.Free;
+  end;
+
 begin
   proj:= findProjectFile();
   if (proj = '') then begin
@@ -197,7 +232,16 @@ begin
     TDOMElement(nLib).SetAttribute('Value', mergeNodeValue(nLib, AModuleName, aLib));
   end;
 
-  // TODO: modify required packages
+  // modify required packages
+  nReqBase := dom.DocumentElement.FindNode('ProjectOptions');
+  nReq := nReqBase.FindNode('RequiredPackages');
+  if (nReq = nil) then begin
+    nReq := dom.CreateElement('RequiredPackages');
+    mergeReq(dom, nReq, aReq);
+    nBase.AppendChild(nReq);
+  end else begin
+    mergeReq(dom, nReq, aReq);
+  end;
 
   WriteXMLFile(dom, proj);
   dom.Free;
