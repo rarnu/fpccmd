@@ -71,6 +71,27 @@ begin
   end;
 end;
 
+procedure mergeGitIgnore(AModuleName: string);
+var
+  p: string;
+  sl: TStringList;
+  changed: Boolean = False;
+begin
+  p := GetCurrentDir + DirectorySeparator + '.gitignore';
+  sl := TStringList.Create;
+  if (FileExists(p)) then begin
+    sl.LoadFromFile(p);
+  end;
+  if (sl.IndexOf(AModuleName + '/') = -1) then begin
+    sl.Add(AModuleName + '/');
+    changed:= True;
+  end;
+  if (changed) then begin
+    sl.SaveToFile(p);
+  end;
+  sl.Free;
+end;
+
 procedure modifyProjectFile(AModuleName: string);
 var
   proj: string;
@@ -305,6 +326,7 @@ begin
       innerRunCmd('rm', params);
       params.Free;
       modifyProjectFile(sarr[0]);
+      mergeGitIgnore(sarr[0]);
     end else begin
       WriteLn(Format('no tag for %s, skipped.', [str]));
     end;
