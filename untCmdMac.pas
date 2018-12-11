@@ -105,6 +105,7 @@ begin
     plist.Add('-Fu' + TYPHON + '/lcl/units/x86_64-darwin');
     plist.Add('-Fu' + TYPHON + '/components/BaseUtils/lib/x86_64-darwin');
     plist.Add('-Fu' + TYPHON + '/packager/units/x86_64-darwin');
+    plist.Add('-FE.');
     plist.Add('-dLCL');
     plist.Add('-dLCLcocoa');
   end;

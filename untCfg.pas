@@ -19,7 +19,7 @@ begin
     Add('-MObjFPC');
     Add('-Scghi');
     Add('-vewnhibq');
-    Add('-Cg');
+    // Add('-Cg');
     Add('-O1');
     SaveToFile(path);
     Free;

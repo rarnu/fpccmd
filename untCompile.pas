@@ -24,7 +24,12 @@ var
   byteRead: LongInt;
   buf: array[0..BUFSIZE - 1] of Byte;
   outstr: string;
+  i: Integer;
 begin
+  WriteLn('compiler => ' + cmd);
+  for i := 0 to params.Count - 1 do begin
+    WriteLn('param => ' + params[i]);
+  end;
   p := TProcess.Create(nil);
   p.Executable:= cmd;
   p.Parameters.Assign(params);
