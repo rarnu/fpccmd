@@ -4,9 +4,19 @@
 
 - - -
 
+### 最近更新
+
+Version 3.0.0
+
+1. 支持 CodeTyphon 6.7.0
+
+2. 支持 Android Arm64 编译（使用 A64 为编译指令）
+
+- - -
+
 ### 编译
 
-使用 [CodeTyphon](http://www.pilotlogic.com/) (6.30 或以上版本) 来编译本项目。
+使用 [CodeTyphon](http://www.pilotlogic.com/) (6.70 或以上版本) 来编译本项目。
 
 请注意，如果你需要编译跨平台的版本，则需要在各个平台上均安装 CodeTyphon，而不是使用其本身的 Cross Element 来纺编译，以避免出现一些奇怪的问题。在本项目的 [Release](https://github.com/rarnu/fpccmd/releases) 页面内，已包含编译好的跨平台版本，可获取并使用之。
 

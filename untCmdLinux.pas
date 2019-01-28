@@ -40,13 +40,15 @@ var
 begin
   if (pt = 'AA') then lib += 'arm'
   else if (pt = 'AI') then lib += 'i386'
-  else if (pt = 'AM') then lib += 'mips';
+  else if (pt = 'AM') then lib += 'mips'
+  else if (pt = 'A64') then lib := 'aarch64';
   lib += '-android';
   plist := getCfg(mainFile, LIB);
   plist.Add('-Tandroid');
   if (pt = 'AA') then plist.Add('-Parm')
   else if (pt = 'AI') then plist.Add('-Pi386')
-  else if (pt = 'AM') then plist.Add('-Pmipsel');
+  else if (pt = 'AM') then plist.Add('-Pmipsel')
+  else if (pt = 'A64') then plist.Add('-Paarch64');
   ndk := findLastAndroidNDK(pt, TYPHON_BINLIB);
   plist.Add('-Fl' + TYPHON_BINLIB + '/' + ndk);
   compile(cmd, plist, mainFile);

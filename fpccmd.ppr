@@ -13,7 +13,7 @@ uses
 procedure writeHelp();
 begin
   WriteLn('FPCCMD (by rarnu) Version: ' + getVersion());
-  WriteLn('    matched CodeTyphon Version: 6.30+');
+  WriteLn('    matched CodeTyphon Version: 6.70+');
   WriteLn('    github: rarnu/fpccmd');
   WriteLn('');
   WriteLn('usage: fpccmd <command>');
@@ -30,7 +30,7 @@ begin
   WriteLn('    get [module name]:  download and modify dependence module to your project, if module name is given, get that module only.');
   WriteLn('');
   WriteLn('usage: fpccmd <Platform> <main file> <ui type>');
-  WriteLn(Format('    Platform: %s', [{$IFDEF WINDOWS}'W(Win64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ELSE}{$IFDEF DARWIN}'M(Mac OSX), I(iOS)'{$ELSE}'L(Linux), AA(Android arm), AI(Android x86), AM(Android mips)'{$ENDIF}{$ENDIF}]));
+  WriteLn(Format('    Platform: %s', [{$IFDEF WINDOWS}'W(Win64), A64(Android Arm64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ELSE}{$IFDEF DARWIN}'M(Mac OSX), I(iOS)'{$ELSE}'L(Linux), A64(Android Arm64), AA(Android arm), AI(Android x86), AM(Android mips)'{$ENDIF}{$ENDIF}]));
   WriteLn(Format('    UIType: %s', [{$IFDEF WINDOWS}'W(Win64), O(Orca64)'{$ELSE}{$IFDEF DARWIN}'C(Cocoa64), O(Orca32)'{$ELSE}'G(Gtk64), O(Orca64)'{$ENDIF}{$ENDIF}]));
   WriteLn('    for other options, you may write a fpccmd.cfg under your project, it will lead the compile.');
   WriteLn('');
@@ -47,7 +47,7 @@ end;
 
 function isPlatformMatches(pt: String): Boolean;
 const
-  PTARR: array[0..{$IFDEF WINDOWS}3{$ELSE}{$IFDEF DARWIN}1{$ELSE}3{$ENDIF}{$ENDIF}] of string = ({$IFDEF WINDOWS}'W','AA','AI','AM'{$ELSE}{$IFDEF DARWIN}'M','I'{$ELSE}'L','AA','AI','AM'{$ENDIF}{$ENDIF});
+  PTARR: array[0..{$IFDEF WINDOWS}4{$ELSE}{$IFDEF DARWIN}1{$ELSE}4{$ENDIF}{$ENDIF}] of string = ({$IFDEF WINDOWS}'W','A64','AA','AI','AM'{$ELSE}{$IFDEF DARWIN}'M','I'{$ELSE}'L','A64','AA','AI','AM'{$ENDIF}{$ENDIF});
 var
   s: string;
   match: Boolean = False;

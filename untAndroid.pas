@@ -31,13 +31,14 @@ var
 begin
   // /usr/local/codetyphon/binLibraries/android-9.0.x-api28-x86
   if (pt = 'AI') then lib := 'i386'
-  else if (pt = 'AM') then lib := 'mips';
+  else if (pt = 'AM') then lib := 'mips'
+  else if (pt = 'A64') then lib := 'aarch64';
   if (FindFirst(binPath +  DirectorySeparator + 'android-*', faAnyFile, src) = 0) then begin
     repeat
       if (src.Name = '.') or (src.Name = '..') then Continue;
       v := extractApiVersion(src.Name);
       if (v > currentVersion) then begin
-        if (pt = 'AA') or (pt = 'AM') then begin
+        if (pt = 'AA') or (pt = 'AM') or (pt = 'A64') then begin
           if (string(src.Name).EndsWith(lib)) then begin
             currentVersion:= v;
             current:= src.Name;

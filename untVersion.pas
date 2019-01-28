@@ -5,8 +5,8 @@ unit untVersion;
 interface
 
 const
-  VERSION_NAME = '2.0.1';
-  VERSION_CODE = 201;
+  VERSION_NAME = '3.0.0';
+  VERSION_CODE = 300;
 
 implementation
 
