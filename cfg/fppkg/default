@@ -1,0 +1,7 @@
+[Defaults]
+ConfigVersion=4
+GlobalPrefix=/usr/local/lib/fpc/../../
+LocalPrefix={LocalRepository}
+Compiler=/usr/local/lib/fpc/../../bin/fpc
+OS=Darwin
+CPU=i386
